@@ -1,3 +1,5 @@
+from typing import Optional
+
 from app.coordinator.events import EventBus
 from app.coordinator.mediator import CoordinatorMediator
 from app.coordinator.strategy import RoundRobinStrategy, WorkerDescriptor
@@ -5,7 +7,7 @@ from app.common.local_transport import LocalWorkerAdapter
 from app.worker.executor import WorkerExecutor
 
 
-def make_system(failed: set[str] | None = None):
+def make_system(failed: Optional[set[str]] = None):
     workers = {
         "w1": WorkerExecutor("w1", 2),
         "w2": WorkerExecutor("w2", 2),

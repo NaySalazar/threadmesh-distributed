@@ -1,11 +1,13 @@
 from __future__ import annotations
+from typing import Optional
+
 from app.worker.executor import WorkerExecutor
 
 
 class LocalWorkerAdapter:
     """Test/simulation adapter for the WorkerPort."""
 
-    def __init__(self, workers: dict[str, WorkerExecutor], failed_ids: set[str] | None = None):
+    def __init__(self, workers: dict[str, WorkerExecutor], failed_ids: Optional[set[str]] = None):
         self.workers = workers
         self.failed_ids = failed_ids or set()
 

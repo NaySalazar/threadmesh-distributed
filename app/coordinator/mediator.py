@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Optional, Protocol
+
 from app.coordinator.events import EventBus
 from app.coordinator.strategy import RoundRobinStrategy, WorkerDescriptor
 
@@ -19,7 +20,7 @@ class CoordinatorMediator:
 
     def dispatch(self, payload: str, duration_ms: int, healthy_ids: set[str]) -> dict:
         attempted: set[str] = set()
-        last_error: Exception | None = None
+        last_error: Optional[Exception] = None
         while len(attempted) < len(healthy_ids):
             worker = self.strategy.next(healthy_ids - attempted)
             attempted.add(worker.worker_id)

@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from itertools import cycle
 from threading import Lock
-from typing import Iterable
+from typing import Iterable, Optional
 
 
 @dataclass(frozen=True)
@@ -21,7 +21,7 @@ class RoundRobinStrategy:
         self._cycle = cycle(self._workers)
         self._lock = Lock()
 
-    def next(self, healthy_ids: set[str] | None = None) -> WorkerDescriptor:
+    def next(self, healthy_ids: Optional[set[str]] = None) -> WorkerDescriptor:
         healthy_ids = healthy_ids or {w.worker_id for w in self._workers}
         if not healthy_ids:
             raise RuntimeError("No healthy workers available")
