@@ -1,0 +1,24 @@
+@startuml
+actor Cliente
+participant "API Gateway\nProxy" as G
+participant "Coordinator\nMediator" as C
+participant "RoundRobin\nStrategy" as S
+participant "Worker A" as W
+participant "Thread 1" as T
+participant "Event Bus\nObserver" as E
+Cliente -> G : POST /api/jobs
+G -> C : POST /jobs
+C -> S : next(healthyWorkers)
+S --> C : Worker A
+C -> E : publish(job.dispatched)
+C -> W : POST /process
+W -> T : submit(job)
+activate T
+T -> T : procesar tarea
+T --> W : resultado
+deactivate T
+W --> C : JobResult
+C -> E : publish(job.completed)
+C --> G : JobResult
+G --> Cliente : HTTP 200 + resultado
+@enduml

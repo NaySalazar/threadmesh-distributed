@@ -1,0 +1,25 @@
+@startuml
+node "Cliente Web / Postman" as Client
+cloud "Red Docker / Nube" {
+  node "Gateway Container" as GW {
+    artifact "FastAPI Gateway\n:8000" as GA
+  }
+  node "Coordinator Container" as CO {
+    artifact "FastAPI Coordinator\n:8000" as CA
+  }
+  node "Worker A Container" as WA {
+    artifact "FastAPI Worker\n4 threads" as WAA
+  }
+  node "Worker B Container" as WB {
+    artifact "FastAPI Worker\n4 threads" as WBA
+  }
+  node "Worker C Container" as WC {
+    artifact "FastAPI Worker\n4 threads" as WCA
+  }
+}
+Client --> GW : HTTPS/REST
+GW --> CO : HTTP/REST
+CO --> WA : HTTP/REST
+CO --> WB : HTTP/REST
+CO --> WC : HTTP/REST
+@enduml

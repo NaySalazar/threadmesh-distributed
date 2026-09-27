@@ -1,0 +1,21 @@
+@startuml
+skinparam componentStyle rectangle
+actor Cliente
+component "API Gateway\n<<Proxy>>" as G
+component "Coordinator\n<<Mediator>>" as C
+component "Round Robin\n<<Strategy>>" as S
+component "Event Bus\n<<Observer>>" as E
+node "Worker A" as A { component "ThreadPoolExecutor" as TA }
+node "Worker B" as B { component "ThreadPoolExecutor" as TB }
+node "Worker C" as D { component "ThreadPoolExecutor" as TC }
+Cliente --> G : HTTPS /api/jobs
+G --> C : REST
+C --> S : seleccionar nodo
+C --> A : REST /process
+C --> B : REST /process
+C --> D : REST /process
+C --> E : publicar eventos
+A --> TA
+B --> TB
+D --> TC
+@enduml
