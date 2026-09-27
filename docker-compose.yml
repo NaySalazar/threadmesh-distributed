@@ -1,0 +1,35 @@
+services:
+  gateway:
+    build: .
+    command: uvicorn app.gateway.main:app --host 0.0.0.0 --port 8000
+    environment:
+      COORDINATOR_URL: http://coordinator:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - coordinator
+
+  coordinator:
+    build: .
+    command: uvicorn app.coordinator.main:app --host 0.0.0.0 --port 8000
+    environment:
+      WORKER_ENDPOINTS: http://worker-a:8000,http://worker-b:8000,http://worker-c:8000
+    depends_on:
+      - worker-a
+      - worker-b
+      - worker-c
+
+  worker-a:
+    build: .
+    command: uvicorn app.worker.main:app --host 0.0.0.0 --port 8000
+    environment: { WORKER_ID: worker-a, THREADS: 4 }
+
+  worker-b:
+    build: .
+    command: uvicorn app.worker.main:app --host 0.0.0.0 --port 8000
+    environment: { WORKER_ID: worker-b, THREADS: 4 }
+
+  worker-c:
+    build: .
+    command: uvicorn app.worker.main:app --host 0.0.0.0 --port 8000
+    environment: { WORKER_ID: worker-c, THREADS: 4 }
